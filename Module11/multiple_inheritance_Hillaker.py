@@ -11,6 +11,9 @@ class Employee:
         self._start_date = start_date
         self._salary = salary
 
+    def __repr__(self):
+        return self.display()
+
     def display(self):
         return f"Start Date: {self._start_date}\nSalary: {self._salary}"
 
