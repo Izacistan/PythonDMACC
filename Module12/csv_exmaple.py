@@ -1,5 +1,7 @@
 import csv
+from class_definitions import CountyDemos as CD
 
+#Smaller amount of data than that of the one below.
 with open('ExampleCSV.csv') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0

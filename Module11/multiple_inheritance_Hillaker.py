@@ -49,7 +49,6 @@ manager1._direct_reports.append(employee1)
 manager1._direct_reports.append(employee2)
 manager1._direct_reports.append(employee3)
 
-# manager1 not returning direct_report list as readable objects. Using __str__ does not help.
 print(manager1.get_reports())
 
 # Change Salary to $42,000
