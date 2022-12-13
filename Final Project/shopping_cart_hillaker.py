@@ -7,16 +7,6 @@ FUNCTIONS
 *********
 '''
 
-
-def invalid_name_input_error():
-    global error_label
-    """Displays error message to GUI when a user enters invalid data in the first or last name field."""
-    error_label = tkr.Label(root, fg="red", bg="#FFFFFF",
-                            text="Name can only contain letters and '-'. Please try again.")
-    error_label.grid(row=1, column=1)
-    return error_label
-
-
 def invalid_customer_id_input_error():
     """Displays error message when a user enters bad data for the 'customer_ID' field."""
     id_error_label = tkr.Label(root, fg="red", bg="#FFFFFF",
@@ -37,19 +27,27 @@ def add_to_inventory(new_item):
 
 # def add_item_to_shopping_cart(customer, item):
 
-def delete_entries():
-    """Deletes the entry text within the first_name_field and last_name_field of the main GUI.
-    This function runs when the create_customer() function is called via the create_customer_button in the main GUI.
-    At the end of that function, delete_entries() runs and the entries are wiped clean for reuse."""
-    first_name_field.delete(0, 35)
-    last_name_field.delete(0, 35)
-    error_label.destroy()
-
-
 def create_customer():
     """This function takes user input from the tkinter GUI fields, validates the input,
     and creates a new customer using the customer class. It also appends the newly created
     customer to the 'customer_list' list."""
+
+    def invalid_name_input_error():
+        global error_label
+        """Displays error message to GUI when a user enters invalid data in the first or last name field."""
+        error_label = tkr.Label(root, fg="red", bg="#FFFFFF",
+                                text="Name can only contain letters and '-'. Please try again.")
+        error_label.grid(row=1, column=1)
+        return error_label
+
+    def delete_entries():
+        """Deletes the entry text within the first_name_field and last_name_field of the main GUI.
+        This function runs when the create_customer() function is called via the create_customer_button in the main GUI.
+        At the end of that function, delete_entries() runs and the entries are wiped clean for reuse."""
+        first_name_field.delete(0, 35)
+        last_name_field.delete(0, 35)
+        error_label.destroy()
+
     name_characters = set(
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'-")  # Characters users may enter in both the first and last name fields.
     customer_id_characters = set(
@@ -117,7 +115,7 @@ class Customer:
         self._active = active
 
     def __repr__(self):
-        return f"{self._first_name} {self._last_name} {self._customer_number}"
+        return f"{self._first_name} {self._last_name}"
 
     def add_to_shopping_cart(self, item):
         self._shopping_cart.append(item)
@@ -143,7 +141,7 @@ INVENTORY and CUSTOMER LIST
 '''
 customer_list = []
 inventory = []
-customer1 = Customer("Isaac", "Hillaker", 1004)
+
 '''
 **************************
 CREATE ITEMS FOR INVENTORY
@@ -180,10 +178,20 @@ exit_button.grid(row=0, column=0)
 
 
 # Customer Select Dropdown
-clicked= tkr.StringVar()
-#Create an instance of Menu in the frame
-main_menu = tkr.OptionMenu(root, clicked, "C++", "Java", "Python", "Rust", "Go", "Ruby")
-main_menu.grid(row=0, column=1)
+clicked = tkr.StringVar()
+try:
+    clicked.set(customer_list[0])
+    drop_menu = tkr.OptionMenu(root, clicked, *customer_list)
+    drop_menu.grid(row=0, column=1)
+except IndexError:
+    pass
+
+try:
+    drop_menu = tkr.OptionMenu(root, clicked, *customer_list)
+    drop_menu.grid(row=0, column=1)
+except TypeError:
+    pass
+
 
 # Customer Buttons
 create_customer_btn = tkr.Button(root, text="Create New Customer", padx=35, pady=20, command=create_customer)
