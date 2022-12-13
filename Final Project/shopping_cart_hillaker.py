@@ -76,13 +76,16 @@ def create_customer():
     delete_entries()
     print(customer_list)
 
+
 def display_shopping_cart():
+    # Setup Shopping Cart GUI
     shop_cart_win = tkr.Toplevel()
     shop_cart_win.geometry('700x700')
     shop_cart_win.group(root)
     shop_cart_win.title("Your Cart")
     shop_cart_win.iconbitmap(
         'C:/Users/hilla/PycharmProjects/PythonDMACC/Final Project/ecommerce_supermarket_cart_store_grocery_icon_229138.ico')
+
     # Exit Button, closes Shopping Cart Window.
     exit_btn = tkr.Button(shop_cart_win, text="Exit Shopping Cart", padx=35, pady=20, fg="white", bg="red",
                           command=shop_cart_win.destroy)
@@ -93,6 +96,7 @@ def display_shopping_cart():
     for items in inventory:
         rows = rows + 1
         tkr.Button(shop_cart_win, text=items, borderwidth=1, padx=btn_width, pady=btn_height).grid(row=rows, column=1)
+
 
 # def add_to_shopping_cart():
 
@@ -105,11 +109,12 @@ CLASSES
 
 
 class Customer:
-    def __init__(self, first_name, last_name, customer_ID, shopping_cart=[]):
+    def __init__(self, first_name, last_name, customer_ID, shopping_cart=[], active=False):
         self._first_name = first_name
         self._last_name = last_name
         self._customer_number = customer_ID
         self._shopping_cart = shopping_cart
+        self._active = active
 
     def __repr__(self):
         return f"{self._first_name} {self._last_name} {self._customer_number}"
@@ -172,12 +177,20 @@ btn_height = 15
 # Exit Button
 exit_button = tkr.Button(root, text="Exit", padx=35, pady=20, fg="white", bg="red", command=root.quit)
 exit_button.grid(row=0, column=0)
+
+
+# Customer Select Dropdown
+clicked= tkr.StringVar()
+#Create an instance of Menu in the frame
+main_menu = tkr.OptionMenu(root, clicked, "C++", "Java", "Python", "Rust", "Go", "Ruby")
+main_menu.grid(row=0, column=1)
+
 # Customer Buttons
 create_customer_btn = tkr.Button(root, text="Create New Customer", padx=35, pady=20, command=create_customer)
-create_customer_btn.grid(row=0, column=1)
+create_customer_btn.grid(row=0, column=2)
 # View Shopping Cart Button
 exit_button = tkr.Button(root, text="View Shopping Cart", padx=20, pady=20, command=display_shopping_cart)
-exit_button.grid(row=0, column=2)
+exit_button.grid(row=0, column=3)
 # Create Customer Form
 first_name_label = tkr.Label(root, bg="#FFFFFF", text="First name")  # First name label
 first_name_label.grid(row=1, column=1)
