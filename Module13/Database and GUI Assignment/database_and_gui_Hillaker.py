@@ -167,10 +167,7 @@ def view_person_table():
         with conn:
             rows = select_all_persons(conn)
             for row in rows:
-                print(row)
-
-
-
+                return person_table_label.config(text=row)
 
 
 def view_student_table():
@@ -202,7 +199,7 @@ def view_student_table():
         with conn:
             rows = select_all_students(conn)
             for row in rows:
-                print(row)
+                return student_table_label.config(text=row)
 
 
 # GUI
@@ -226,14 +223,20 @@ create_person_button.grid(row=10)
 create_person_button = tkr.Button(MAIN_WINDOW, text="Add Student", width=30, command=create_student)
 create_person_button.grid(row=15)
 
+#View Person Table
+person_table_label = tkr.Label(MAIN_WINDOW, text="Click 'View Person Table' to display the table")
+person_table_label.grid(row=20)
 # View Person Table button
 view_person_button = tkr.Button(MAIN_WINDOW, text="View Person Table", width=30, command=view_person_table)
-view_person_button.grid(row=20)
+view_person_button.grid(row=25)
 
 
-
+#View Student Table
+student_table_label = tkr.Label(MAIN_WINDOW, text="Click 'View Student Table' to display the table")
+student_table_label.grid(row=30)
 # View Student Table button
 view_student_button = tkr.Button(MAIN_WINDOW, text="View Student Table", width=30, command=view_student_table)
-view_student_button.grid(row=25)
+view_student_button.grid(row=35)
+
 
 MAIN_WINDOW.mainloop()
