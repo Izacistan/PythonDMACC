@@ -76,7 +76,6 @@ def create_customer():
     delete_entries()
     print(customer_list)
 
-
 def display_shopping_cart():
     shop_cart_win = tkr.Toplevel()
     shop_cart_win.geometry('700x700')
@@ -90,15 +89,10 @@ def display_shopping_cart():
     exit_btn.grid(row=0, column=0)
 
     # Display Items
-    for rows in range(1, len(inventory) + 1):
-        for c in inventory:
-            tkr.Button(shop_cart_win, text=(getattr(c, '_item_name')), borderwidth=1, padx=btn_width, pady=btn_height).grid(row=rows, column=1)
-    # for rows in range(len(inventory)):
-    #     for item in inventory:
-    #         tkr.Label(shop_cart_win, text=(getattr(item, '_item_name'))).grid(row=rows, column=1)
-
-    item = tkr.Label(shop_cart_win, text=(getattr(item1, '_item_name')))
-    # item.grid(row=1, column=1)
+    rows = 0
+    for items in inventory:
+        rows = rows + 1
+        tkr.Button(shop_cart_win, text=items, borderwidth=1, padx=btn_width, pady=btn_height).grid(row=rows, column=1)
 
 # def add_to_shopping_cart():
 
@@ -131,10 +125,10 @@ class Item:
         self._price = price
 
     def __repr__(self):
-        return f"{self._item_name} (Price: ${self._price})"
+        return self._item_name
 
-    def __str__(self):
-        return f"{self._item_name} (Price: ${self._price})"
+    # def __str__(self):
+    #     return f"{self._item_name} (Price: ${self._price})"
 
 
 '''
