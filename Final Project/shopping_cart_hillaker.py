@@ -7,6 +7,28 @@ FUNCTIONS
 *********
 '''
 
+
+# def update_drop_menu(new_customer):
+#     drop_menu.children["menu"].delete(0, "end")
+#     for c in customer_list:
+#         customer_list.append(c._first_name)
+#         drop_menu.children["menu"].add_command(label=c._first_name, command=lambda cust=c._first_name: clicked.set(cust))
+#     clicked.set(customer_list[0])
+
+
+def add_item_to_cart(item):
+    """Appends an item object to the shopping cart list."""
+    if item._quantity <= 0:
+        out_of_stock_label = tkr.Label(root, fg="red", bg="#FFFFFF", text="Out of stock!")
+        out_of_stock_label.grid(row=9, column=1)
+    else:
+        cart.append(item)
+        added_item_label = tkr.Label(root, fg="green", bg="#FFFFFF",
+                                     text=f"{item} added to your cart!")
+        added_item_label.grid(row=9, column=1)
+        print(cart)
+
+
 def invalid_customer_id_input_error():
     """Displays error message when a user enters bad data for the 'customer_ID' field."""
     id_error_label = tkr.Label(root, fg="red", bg="#FFFFFF",
@@ -25,7 +47,61 @@ def add_to_inventory(new_item):
     inventory.append(new_item)
 
 
-# def add_item_to_shopping_cart(customer, item):
+def display_shopping_cart():
+    # Setup Shopping Cart GUI
+    shop_cart_win = tkr.Toplevel()
+    shop_cart_win.geometry('700x700')
+    shop_cart_win.group(root)
+    shop_cart_win.title("Your Cart")
+    shop_cart_win.iconbitmap(
+        'C:/Users/hilla/PycharmProjects/PythonDMACC/Final Project/ecommerce_supermarket_cart_store_grocery_icon_229138.ico')
+
+    def checkout_cart():
+        checkout_win = tkr.Toplevel()
+        checkout_win.geometry('700x700')
+        checkout_win.group(root)
+        checkout_win.title("Checkout your Cart")
+        checkout_win.iconbitmap(
+            'C:/Users/hilla/PycharmProjects/PythonDMACC/Final Project/ecommerce_supermarket_cart_store_grocery_icon_229138.ico')
+        exit_btn = tkr.Button(checkout_win, text="Exit Shopping Cart", padx=35, pady=20, fg="white", bg="red",
+                              command=checkout_win.destroy)
+        exit_btn.grid(row=0, column=0)
+
+    def get_cart_total():
+        """Calculate total price for items in shopping cart. Return the total."""
+        TAX_RATE = 0.07
+        total = 0
+        for price in cart:
+            total += price._price
+        # Calculate tax
+        tax_owed = round(total * 0.07, 2)
+        # Add tax to total for result.
+        total = round(tax_owed + total, 2)
+        return f"TAX: ${tax_owed}\nTOTAL: ${total}"
+
+    # Exit Button, closes Shopping Cart Window.
+    exit_btn = tkr.Button(shop_cart_win, text="Exit Shopping Cart", padx=35, pady=20, fg="white", bg="red",
+                          command=shop_cart_win.destroy)
+    exit_btn.grid(row=0, column=0)
+
+    checkout_btn = tkr.Button(shop_cart_win, text="Checkout Cart", padx=35, pady=20, fg="white", bg="green",
+                              command=checkout_cart)
+    checkout_btn.grid(row=0, column=2)
+
+    # Display Items
+    rows = 0
+    for items in cart:
+        rows = rows + 1
+        tkr.Button(shop_cart_win, text=items, borderwidth=1, padx=btn_width, pady=btn_height).grid(row=rows, column=1)
+        rows = rows + 1
+        tkr.Label(shop_cart_win, text=items.display_price(), borderwidth=1, padx=btn_width, pady=btn_height).grid(
+            row=rows, column=1)
+
+    # Calculate tax and total cost of order.
+    print(get_cart_total())
+    tkr.Label(shop_cart_win, text=get_cart_total(), borderwidth=1, padx=btn_width, pady=btn_height).grid(
+        row=rows, column=2)
+
 
 def create_customer():
     """This function takes user input from the tkinter GUI fields, validates the input,
@@ -35,6 +111,7 @@ def create_customer():
     def invalid_name_input_error():
         global error_label
         """Displays error message to GUI when a user enters invalid data in the first or last name field."""
+
         error_label = tkr.Label(root, fg="red", bg="#FFFFFF",
                                 text="Name can only contain letters and '-'. Please try again.")
         error_label.grid(row=1, column=1)
@@ -46,7 +123,10 @@ def create_customer():
         At the end of that function, delete_entries() runs and the entries are wiped clean for reuse."""
         first_name_field.delete(0, 35)
         last_name_field.delete(0, 35)
-        error_label.destroy()
+        try:
+            error_label.destroy()
+        except NameError:
+            pass
 
     name_characters = set(
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'-")  # Characters users may enter in both the first and last name fields.
@@ -75,30 +155,6 @@ def create_customer():
     print(customer_list)
 
 
-def display_shopping_cart():
-    # Setup Shopping Cart GUI
-    shop_cart_win = tkr.Toplevel()
-    shop_cart_win.geometry('700x700')
-    shop_cart_win.group(root)
-    shop_cart_win.title("Your Cart")
-    shop_cart_win.iconbitmap(
-        'C:/Users/hilla/PycharmProjects/PythonDMACC/Final Project/ecommerce_supermarket_cart_store_grocery_icon_229138.ico')
-
-    # Exit Button, closes Shopping Cart Window.
-    exit_btn = tkr.Button(shop_cart_win, text="Exit Shopping Cart", padx=35, pady=20, fg="white", bg="red",
-                          command=shop_cart_win.destroy)
-    exit_btn.grid(row=0, column=0)
-
-    # Display Items
-    rows = 0
-    for items in inventory:
-        rows = rows + 1
-        tkr.Button(shop_cart_win, text=items, borderwidth=1, padx=btn_width, pady=btn_height).grid(row=rows, column=1)
-
-
-# def add_to_shopping_cart():
-
-
 '''
 *******
 CLASSES
@@ -117,21 +173,28 @@ class Customer:
     def __repr__(self):
         return f"{self._first_name} {self._last_name}"
 
+    def __str__(self):
+        return f"{self._first_name} {self._last_name}"
+
     def add_to_shopping_cart(self, item):
         self._shopping_cart.append(item)
 
 
 class Item:
-    def __init__(self, item_name, item_number, price):
+    def __init__(self, item_name, item_number, price, quantity):
         self._item_name = item_name
         self._item_number = item_number
         self._price = price
+        self._quantity = quantity
 
     def __repr__(self):
         return self._item_name
 
-    # def __str__(self):
-    #     return f"{self._item_name} (Price: ${self._price})"
+    def __str__(self):
+        return f"{self._item_name}"
+
+    def display_price(self):
+        return f"${self._price}"
 
 
 '''
@@ -139,17 +202,21 @@ class Item:
 INVENTORY and CUSTOMER LIST
 ***************************
 '''
-customer_list = []
-inventory = []
 
+cust_1 = Customer("Isaac", "Hillaker", 3001)
+cust_2 = Customer("Alice", "Applebaum", 3001)
+cust_3 = Customer("Bob", "Smith", 3001)
+customer_list = [cust_1, cust_2, cust_3]
+inventory = []
+cart = []
 '''
 **************************
 CREATE ITEMS FOR INVENTORY
 **************************
 '''
-item1 = Item("Nintendo Switch", 1001, 299.00)
-item2 = Item("Playstation 5", 1002, 499.00)
-item3 = Item("Xbox Series X", 1003, 499.00)
+item1 = Item("Nintendo Switch", 1001, 299.00, 6)
+item2 = Item("Playstation 5", 1002, 499.00, 0)
+item3 = Item("Xbox Series X", 1003, 499.00, 2)
 add_to_inventory(item1)
 add_to_inventory(item2)
 add_to_inventory(item3)
@@ -161,10 +228,10 @@ GUI
 ***
 '''
 root = tkr.Tk()
-root.geometry('700x700')  # Resize window to adequately show buttons
+root.geometry('800x700')  # Resize window to adequately show buttons
 root['background'] = '#FFFFFF'
 # Title and Icon
-root.title("Browse Items")
+root.title("Shopping Website")
 root.iconbitmap(
     'C:/Users/hilla/PycharmProjects/PythonDMACC/Final Project/ecommerce_supermarket_cart_store_grocery_icon_229138.ico')
 
@@ -176,29 +243,18 @@ btn_height = 15
 exit_button = tkr.Button(root, text="Exit", padx=35, pady=20, fg="white", bg="red", command=root.quit)
 exit_button.grid(row=0, column=0)
 
-
 # Customer Select Dropdown
 clicked = tkr.StringVar()
-try:
-    clicked.set(customer_list[0])
-    drop_menu = tkr.OptionMenu(root, clicked, *customer_list)
-    drop_menu.grid(row=0, column=1)
-except IndexError:
-    pass
-
-try:
-    drop_menu = tkr.OptionMenu(root, clicked, *customer_list)
-    drop_menu.grid(row=0, column=1)
-except TypeError:
-    pass
-
+clicked.set(customer_list[0])
+drop_menu = tkr.OptionMenu(root, clicked, *customer_list)
+drop_menu.grid(row=0, column=1)
 
 # Customer Buttons
 create_customer_btn = tkr.Button(root, text="Create New Customer", padx=35, pady=20, command=create_customer)
 create_customer_btn.grid(row=0, column=2)
 # View Shopping Cart Button
-exit_button = tkr.Button(root, text="View Shopping Cart", padx=20, pady=20, command=display_shopping_cart)
-exit_button.grid(row=0, column=3)
+view_cart = tkr.Button(root, text="View Shopping Cart", padx=20, pady=20, command=display_shopping_cart)
+view_cart.grid(row=0, column=3)
 # Create Customer Form
 first_name_label = tkr.Label(root, bg="#FFFFFF", text="First name")  # First name label
 first_name_label.grid(row=1, column=1)
@@ -209,11 +265,14 @@ last_name_label.grid(row=3, column=1)
 last_name_field = tkr.Entry(root, bg="lightgray", width=btn_width)  # Last name field
 last_name_field.grid(row=4, column=1)
 # Items Gallery
-item_1 = tkr.Button(root, text="Nintendo Switch", padx=btn_width, pady=btn_height)
+item_1 = tkr.Button(root, text="Nintendo Switch", padx=btn_width, pady=btn_height,
+                    command=lambda: add_item_to_cart(item1))
 item_1.grid(row=8, column=0)
-item_2 = tkr.Button(root, text="Playstation 5", padx=btn_width, pady=btn_height)
+item_2 = tkr.Button(root, text="Playstation 5", padx=btn_width, pady=btn_height,
+                    command=lambda: add_item_to_cart(item2))
 item_2.grid(row=8, column=1)
-item_3 = tkr.Button(root, text="Xbox Series X", padx=btn_width, pady=btn_height)
+item_3 = tkr.Button(root, text="Xbox Series X", padx=btn_width, pady=btn_height,
+                    command=lambda: add_item_to_cart(item3))
 item_3.grid(row=8, column=2)
 
 root.mainloop()
