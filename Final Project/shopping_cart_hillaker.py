@@ -18,10 +18,20 @@ FUNCTIONS
 
 def add_item_to_cart(item):
     """Appends an item object to the shopping cart list."""
+    def delete_labels():
+        try:
+            out_of_stock_label.after(500, out_of_stock_label.destroy())
+            added_item_label.after(500, added_item_label.destroy())
+        except NameError:
+            pass
+
     if item._quantity <= 0:
+        global out_of_stock_label, added_item_label
+        delete_labels()
         out_of_stock_label = tkr.Label(root, fg="red", bg="#FFFFFF", text="Out of stock!")
         out_of_stock_label.grid(row=9, column=1)
     else:
+        delete_labels()
         cart.append(item)
         added_item_label = tkr.Label(root, fg="green", bg="#FFFFFF",
                                      text=f"{item} added to your cart!")
