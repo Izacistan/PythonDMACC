@@ -1,5 +1,6 @@
 import tkinter as tkr
 import random as r
+from datetime import date
 
 '''
 *********
@@ -73,9 +74,16 @@ def display_shopping_cart():
         checkout_win.title("Checkout your Cart")
         checkout_win.iconbitmap(
             'C:/Users/hilla/PycharmProjects/PythonDMACC/Final Project/ecommerce_supermarket_cart_store_grocery_icon_229138.ico')
+        # Remove items from shopping cart
+        cart.clear()
+        print(cart)
+        shop_cart_win.destroy()
+        order_date = date.today()
         exit_btn = tkr.Button(checkout_win, text="Exit Shopping Cart", padx=35, pady=20, fg="white", bg="red",
                               command=checkout_win.destroy)
         exit_btn.grid(row=0, column=0)
+        order_placed_label = tkr.Label(checkout_win, text=f"ORDER PLACED on {order_date}", padx=35, pady=20, fg="white", bg="blue")
+        order_placed_label.grid(row=0, column=1)
 
     def get_cart_total():
         """Calculate total price for items in shopping cart. Return the total."""
@@ -88,6 +96,13 @@ def display_shopping_cart():
         # Add tax to total for result.
         total = round(tax_owed + total, 2)
         return f"TAX: ${tax_owed}\nTOTAL: ${total}"
+
+    def remove_from_cart(item):
+        cart.remove(item)
+        added_item_label = tkr.Label(shop_cart_win, fg="red", bg="#FFFFFF",
+                                     text="Removed from cart!")
+        added_item_label.grid(row=9, column=1)
+        print(cart)
 
     # Exit Button, closes Shopping Cart Window.
     exit_btn = tkr.Button(shop_cart_win, text="Exit Shopping Cart", padx=35, pady=20, fg="white", bg="red",
@@ -102,7 +117,7 @@ def display_shopping_cart():
     rows = 0
     for items in cart:
         rows = rows + 1
-        tkr.Button(shop_cart_win, text=items, borderwidth=1, padx=btn_width, pady=btn_height).grid(row=rows, column=1)
+        tkr.Button(shop_cart_win, text=items, borderwidth=1, padx=btn_width, pady=btn_height, command=lambda: remove_from_cart(items)).grid(row=rows, column=1)
         rows = rows + 1
         tkr.Label(shop_cart_win, text=items.display_price(), borderwidth=1, padx=btn_width, pady=btn_height).grid(
             row=rows, column=1)
