@@ -5,7 +5,7 @@
     .
 """
 # Declare lists, dictionaries, and variables.
-customer_dict = {}
+customer_dict = {"001": ["Isaac", "Hillaker", 26, "F"]}
 coverage_options = ["SM", "L", "F"]
 coverage_prices = {"SM": [2593, 608, 552, 525, 494, 515],
                    "L": [2957, 691, 627, 596, 560, 585],
@@ -66,20 +66,119 @@ def create_customer():
             break  # Leave the inner loop of the try/except statements.
 
     # Add new customer data to customer dictionary.
-    customer_dict.update({"001": [first_name, last_name, age, desired_coverage]})
+    customer_dict.update({"002": [first_name, last_name, age, desired_coverage]})
     return customer_dict  # Last line of create_customer() function
 
 
-# 4) Add the customer’s coverage cost to the dictionary value according to their age and coverage desired using the table above
+def calc_coverage_cost():
+    """
+    1) Takes a customer's age from the customer_dict dictionary using their unique key.
+    2) Using the unique key, the function grabs the customer's coverage type from the list in the value part of the dictionary.
+    3) The function then retrieves the cost of the various levels of coverage from the coverage_prices dictionary.
+    4) Using the customer's age, the function then calculates how much their coverage will cost.
+    5) If the customer has been involved in a car accident, the function increase the final quote price by 41%.
+    6) Finally, the function appends this new quote price to the customer's list, in the customer_dict dictionary.
+    """
+    customer = customer_dict["002"] #automatically created by the create_customer() function. In a real world program I would make a new, unique key everytime.
+    customer_age = customer[2] # index 2 is where customer age is stored in customer_dict dictionary.
+    customer_coverage_type = customer[3]  # get list index where coverage type is located.
+    customer_coverage_price = 0 #initial value of 0, changed later in function depending on customer's age.
 
-# 5): Ask the user if they've had any accidents
-# If the user has had any accidents, their coverage rate increases by 41%
-# Update the customer’s coverage cost in the dictionary
+    # calculate costs for ages 16-24.
+    if 16 <= customer_age <= 24:
+        if customer_coverage_type == "SM":
+            price = coverage_prices["SM"]
+            customer_coverage_price = price[0]
+        elif customer_coverage_type == "L":
+            price = coverage_prices["L"]
+            customer_coverage_price = price[0]
+        else:
+            price = coverage_prices["F"]
+            customer_coverage_price = price[0]
 
-# 6): Output the annual insurance cost for the customer
+    # calculate costs for ages 25-34.
+    if 25 <= customer_age <= 34:
+        if customer_coverage_type == "SM":
+            price = coverage_prices["SM"]
+            customer_coverage_price = price[1]
+        elif customer_coverage_type == "L":
+            price = coverage_prices["L"]
+            customer_coverage_price = price[1]
+        else:
+            price = coverage_prices["F"]
+            customer_coverage_price = price[1]
 
-# 7): Ensure that you have docstring at the top of your program with your name/date/program information
+    # calculate costs for ages 35-44.
+    if 35 <= customer_age <= 44:
+        if customer_coverage_type == "SM":
+            price = coverage_prices["SM"]
+            customer_coverage_price = price[2]
+        elif customer_coverage_type == "L":
+            price = coverage_prices["L"]
+            customer_coverage_price = price[2]
+        else:
+            price = coverage_prices["F"]
+            customer_coverage_price = price[2]
+
+    # calculate costs for ages 45-54.
+    if 45 <= customer_age <= 54:
+        if customer_coverage_type == "SM":
+            price = coverage_prices["SM"]
+            customer_coverage_price = price[3]
+        elif customer_coverage_type == "L":
+            price = coverage_prices["L"]
+            customer_coverage_price = price[3]
+        else:
+            price = coverage_prices["F"]
+            customer_coverage_price = price[3]
+
+    # calculate costs for ages 55-64.
+    if 55 <= customer_age <= 64:
+        if customer_coverage_type == "SM":
+            price = coverage_prices["SM"]
+            customer_coverage_price = price[4]
+        elif customer_coverage_type == "L":
+            price = coverage_prices["L"]
+            customer_coverage_price = price[4]
+        else:
+            price = coverage_prices["F"]
+            customer_coverage_price = price[4]
+
+    # calculate costs for aged 65+.
+    if customer_age > 65:
+        if customer_coverage_type == "SM":
+            price = coverage_prices["SM"]
+            customer_coverage_price = price[5]
+        elif customer_coverage_type == "L":
+            price = coverage_prices["L"]
+            customer_coverage_price = price[5]
+        else:
+            price = coverage_prices["F"]
+            customer_coverage_price = price[5]
+
+    # adjust coverage price if customer has been involved in an accident before.
+    while True:
+        try:
+            has_accidents = input("Have you ever been involved in a car accident? Type Y or N: ")
+            has_accidents = has_accidents.upper()
+            if has_accidents == "Y":
+                final_price = customer_coverage_price * 0.41 + customer_coverage_price # price increases by 41% if customer answered YES.
+                customer.append(final_price)  # add final price to list within customer_dict
+                print(f"Your quote is: ${final_price}")
+                break
+            elif has_accidents == "N":
+                final_price = customer_coverage_price
+                customer.append(final_price)  # add final price to list within customer_dict
+                print(f"Your quote is: ${final_price}")
+                break
+            else:
+                print("Try again. Type Y or N.")
+        except TypeError:
+            print("You entered invalid data, please try again.")
+
 
 # DRIVER CODE
 create_customer()
+print(customer_dict)
+calc_coverage_cost()
 print(customer_dict)
