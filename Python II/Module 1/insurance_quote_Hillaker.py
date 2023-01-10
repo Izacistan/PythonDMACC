@@ -1,8 +1,9 @@
 """
     AUTHOR: Isaac Hillaker
     DATE: 01/09/2023
-    This program takes in user data and gives back a quote for auto insurance based on that data.
-    .
+    This program takes in user data to create a customer. After a customer has been created, the program calculates (based on the customer's given age)
+    how much their quote will cost. The cost of the coverage increases by 41% if the customer has been in a car accident before. The price of coverage
+    gets smaller as the customer's age increases.
 """
 # Declare lists, dictionaries, and variables.
 customer_dict = {"001": ["Isaac", "Hillaker", 26, "F"]}
@@ -19,19 +20,20 @@ def create_customer():
     and adds the customer to the customer_dict dictionary.
     """
 
-    global last_name, first_name, age
-
+    global last_name, first_name, age, customer_coverage_price
+    customer_coverage_price = 0  # initial value of 0, changed later in function depending on customer's age.
     def invalid_name_input_error():
         """Displays an error message when a user enters invalid data in the first or last name fields."""
         error_msg = "Name can only contains letters and ' - '. Please try again."
         print(error_msg)
 
-    # 1) Gather User Input
-    # 2) Try/Except User Input Validation
+    #Get and validate user input
     name_characters = set(
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'-")  # Characters users may enter in both the first and last name fields.
 
-    while True:  # get FIRST and LAST name and VALIDATE info.
+
+    # get FIRST and LAST name and VALIDATE info.
+    while True:
         first_name = input("Type your first name: ")
         last_name = input("Type your last name: ")
         if len(first_name.strip()) == 0 or len(
@@ -43,7 +45,8 @@ def create_customer():
         else:
             break
 
-    while True:  # get AGE and VALIDATE that is an integer and that it is 16 or higher.
+    # get AGE and VALIDATE that is an integer and that it is 16 or higher.
+    while True:
         try:
             while True:
                 age = int(input("Enter your age. You must be at least 16 years old: "))
@@ -57,7 +60,8 @@ def create_customer():
         else:
             break
 
-    while True:  # get coverage type from user and validate.
+    # get coverage type from user and validate.
+    while True:
         desired_coverage = input("Type your preferred coverage level (SM, L, or F): ")
         desired_coverage = desired_coverage.upper()  # Converts desired_coverage variable to caps, accounting for user entering in lowercase options.
         if desired_coverage not in coverage_options:
@@ -65,31 +69,12 @@ def create_customer():
         else:
             break  # Leave the inner loop of the try/except statements.
 
-    # Add new customer data to customer dictionary.
-    customer_dict.update({"002": [first_name, last_name, age, desired_coverage]})
-    return customer_dict  # Last line of create_customer() function
-
-
-def calc_coverage_cost():
-    """
-    1) Takes a customer's age from the customer_dict dictionary using their unique key.
-    2) Using the unique key, the function grabs the customer's coverage type from the list in the value part of the dictionary.
-    3) The function then retrieves the cost of the various levels of coverage from the coverage_prices dictionary.
-    4) Using the customer's age, the function then calculates how much their coverage will cost.
-    5) If the customer has been involved in a car accident, the function increase the final quote price by 41%.
-    6) Finally, the function appends this new quote price to the customer's list, in the customer_dict dictionary.
-    """
-    customer = customer_dict["002"] #automatically created by the create_customer() function. In a real world program I would make a new, unique key everytime.
-    customer_age = customer[2] # index 2 is where customer age is stored in customer_dict dictionary.
-    customer_coverage_type = customer[3]  # get list index where coverage type is located.
-    customer_coverage_price = 0 #initial value of 0, changed later in function depending on customer's age.
-
     # calculate costs for ages 16-24.
-    if 16 <= customer_age <= 24:
-        if customer_coverage_type == "SM":
+    if 16 <= age <= 24:
+        if desired_coverage == "SM":
             price = coverage_prices["SM"]
             customer_coverage_price = price[0]
-        elif customer_coverage_type == "L":
+        elif desired_coverage == "L":
             price = coverage_prices["L"]
             customer_coverage_price = price[0]
         else:
@@ -97,11 +82,11 @@ def calc_coverage_cost():
             customer_coverage_price = price[0]
 
     # calculate costs for ages 25-34.
-    if 25 <= customer_age <= 34:
-        if customer_coverage_type == "SM":
+    if 25 <= age <= 34:
+        if desired_coverage == "SM":
             price = coverage_prices["SM"]
             customer_coverage_price = price[1]
-        elif customer_coverage_type == "L":
+        elif desired_coverage == "L":
             price = coverage_prices["L"]
             customer_coverage_price = price[1]
         else:
@@ -109,11 +94,11 @@ def calc_coverage_cost():
             customer_coverage_price = price[1]
 
     # calculate costs for ages 35-44.
-    if 35 <= customer_age <= 44:
-        if customer_coverage_type == "SM":
+    if 35 <= age <= 44:
+        if desired_coverage == "SM":
             price = coverage_prices["SM"]
             customer_coverage_price = price[2]
-        elif customer_coverage_type == "L":
+        elif desired_coverage == "L":
             price = coverage_prices["L"]
             customer_coverage_price = price[2]
         else:
@@ -121,11 +106,11 @@ def calc_coverage_cost():
             customer_coverage_price = price[2]
 
     # calculate costs for ages 45-54.
-    if 45 <= customer_age <= 54:
-        if customer_coverage_type == "SM":
+    if 45 <= age <= 54:
+        if desired_coverage == "SM":
             price = coverage_prices["SM"]
             customer_coverage_price = price[3]
-        elif customer_coverage_type == "L":
+        elif desired_coverage == "L":
             price = coverage_prices["L"]
             customer_coverage_price = price[3]
         else:
@@ -133,11 +118,11 @@ def calc_coverage_cost():
             customer_coverage_price = price[3]
 
     # calculate costs for ages 55-64.
-    if 55 <= customer_age <= 64:
-        if customer_coverage_type == "SM":
+    if 55 <= age <= 64:
+        if desired_coverage == "SM":
             price = coverage_prices["SM"]
             customer_coverage_price = price[4]
-        elif customer_coverage_type == "L":
+        elif desired_coverage == "L":
             price = coverage_prices["L"]
             customer_coverage_price = price[4]
         else:
@@ -145,17 +130,28 @@ def calc_coverage_cost():
             customer_coverage_price = price[4]
 
     # calculate costs for aged 65+.
-    if customer_age > 65:
-        if customer_coverage_type == "SM":
+    if age > 65:
+        if desired_coverage == "SM":
             price = coverage_prices["SM"]
             customer_coverage_price = price[5]
-        elif customer_coverage_type == "L":
+        elif desired_coverage == "L":
             price = coverage_prices["L"]
             customer_coverage_price = price[5]
         else:
             price = coverage_prices["F"]
             customer_coverage_price = price[5]
 
+    # Add new customer data to customer dictionary.
+    customer_dict.update({"002": [first_name, last_name, age, desired_coverage, customer_coverage_price]})
+    return customer_dict  # Last line of create_customer() function
+
+
+def calc_final_quote():
+    """
+    This function checks if a customer has been involved in a car accident. If they have, then their coverage cost is increased by 41%.
+    Otherwise, their price does not change. The function then updates the previous coverage cost in the customer's list, in the cust_dictionary.
+    """
+    customer = customer_dict["002"] #automatically created by the create_customer() function. In a real world program I would make a new, unique key everytime.
     # adjust coverage price if customer has been involved in an accident before.
     while True:
         try:
@@ -163,12 +159,12 @@ def calc_coverage_cost():
             has_accidents = has_accidents.upper()
             if has_accidents == "Y":
                 final_price = customer_coverage_price * 0.41 + customer_coverage_price # price increases by 41% if customer answered YES.
-                customer.append(final_price)  # add final price to list within customer_dict
+                customer[4] = final_price  # add final price to list within customer_dict
                 print(f"Your quote is: ${final_price}")
                 break
             elif has_accidents == "N":
                 final_price = customer_coverage_price
-                customer.append(final_price)  # add final price to list within customer_dict
+                customer[4] = final_price  # add final price to list within customer_dict
                 print(f"Your quote is: ${final_price}")
                 break
             else:
@@ -180,5 +176,5 @@ def calc_coverage_cost():
 # DRIVER CODE
 create_customer()
 print(customer_dict)
-calc_coverage_cost()
+calc_final_quote()
 print(customer_dict)
